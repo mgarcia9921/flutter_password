@@ -19,5 +19,5 @@ String toDateTimeStringZH({DateTime datetime, String formatString = 'yyyy-MM-dd 
 }
 
 void test() {
-	toDateTimeStringZH(datetime: new DateTime.now(), formatString: 'yyyy年MM月dd日 hh:mm分');
+	toDateTimeStringZH(datetime: new DateTime.now(), formatString: 'yyyyMMdd hh:mm');
 }

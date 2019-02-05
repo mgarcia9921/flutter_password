@@ -17,7 +17,7 @@ class Detail extends StatefulWidget {
       : super(key: key);
 
   final String title;
-  final bool isNew; // 用于标记是否为新建
+  final bool isNew;
   final int index;
 
   @override
@@ -43,29 +43,25 @@ class DetailState extends State<Detail> {
     item.modifyDate = new DateTime.now();
     if (widget.isNew) {
       item.createDate = item.modifyDate;
-      // 新建
       state?.addPsItem(item);
-//      print(state.data.list);
       state?.savePsData()?.then((file) {
-        print('保存成功：${file.path}');
+        print('Successfully saved：${file.path}');
         Application.router.pop(context);
       })?.catchError((error) {
-        print('保存失败：$error');
+        print('Save failed：$error');
       });
     } else {
-      // 编辑
       print(item.createDate.toString());
       state?.modifyPsItem(index: widget.index, item: item);
       state?.savePsData()?.then((file) {
-        print('保存成功：${file.path}');
+        print('Successfully saved：${file.path}');
         Application.router.pop(context);
       })?.catchError((error) {
-        print('保存失败：$error');
+        print('Save failed：$error');
       });
     }
   }
 
-  // 设置编辑模式
   void setEditor(BuildContext context) {
     if (isEditor == false) {
       setState(() {
@@ -81,13 +77,10 @@ class DetailState extends State<Detail> {
 
   @override
   void initState() {
-    // TODO: implement initState
     state = GState.of(context);
-    print('详情页');
-
-    isEditor = widget.isNew; // 初始化是否可编辑
+    isEditor = widget.isNew;
     if (widget.isNew) {
-      // 如果是新建，就创建一个新的临时变量
+
       DateTime dt = new DateTime.now();
       item = new PsItem(
           id: uuid.v1(),
@@ -97,7 +90,6 @@ class DetailState extends State<Detail> {
           createDate: dt,
           modifyDate: dt);
     } else {
-      // 如果是编辑，就通过copy创建给临时变量
       int index = widget.index;
       String id = state.data.list[index].id;
       String title = state.data.list[index].title;
@@ -117,23 +109,23 @@ class DetailState extends State<Detail> {
     }
     setController();
     super.initState();
-    // 获得默认主题
+
   }
 
-  // 密码输入框验证
+
   bool verificationPassword(String str) {
     if (str.isEmpty) {
       print(str.isEmpty);
-      // 判断是否为空
+
       setState(() {
         verPassword?.isSuccess = false;
-        verPassword?.msg = '不能为空';
+        verPassword?.msg = 'Can not be empty';
       });
       return false;
     } else if (!str.contains(RegExp(r'^[0-9a-zA-Z]*$'))) {
       setState(() {
         verPassword?.isSuccess = false;
-        verPassword?.msg = '仅能输入字母数字及特殊符号';
+        verPassword?.msg = 'Only alphanumeric and special symbols can be entered';
       });
       return false;
     }
@@ -144,13 +136,12 @@ class DetailState extends State<Detail> {
     return true;
   }
 
-  // 标题输入框验证
+
   bool verificationTitle(String str) {
     if (str.isEmpty) {
-      // 判断是否为空
       setState(() {
         verTitle?.isSuccess = false;
-        verTitle?.msg = '不能为空';
+        verTitle?.msg = 'Can not be empty';
       });
       return false;
     }
@@ -168,7 +159,7 @@ class DetailState extends State<Detail> {
       // 判断是否为空
       setState(() {
         verAccount?.isSuccess = false;
-        verAccount?.msg = '你也许会忘记账号，记一下吧';
+        verAccount?.msg = 'You may forget your account, remember it.';
       });
       return false;
     } else if (str.indexOf('@') >= 0 &&
@@ -177,7 +168,7 @@ class DetailState extends State<Detail> {
             0) {
       setState(() {
         verAccount?.isSuccess = false;
-        verAccount?.msg = '它可能不是一个邮箱地址';
+        verAccount?.msg = 'It may not be an email address';
       });
       return false;
     } else if (str.indexOf(new RegExp(r'^[0-9]*$')) >= 0 &&
@@ -186,7 +177,7 @@ class DetailState extends State<Detail> {
             -1) {
       setState(() {
         verAccount?.isSuccess = false;
-        verAccount?.msg = '它可能不是一个手机号';
+        verAccount?.msg = 'It may not be a mobile phone number';
       });
       return false;
     }
@@ -198,20 +189,18 @@ class DetailState extends State<Detail> {
   }
 
   void setController() {
-    // 标题输入框控制器
     _titleController = new TextEditingController(text: item.title);
     _titleController.addListener(() {
       item.title = _titleController.text;
       verificationTitle(item.title);
     });
 
-    // 账号控制器
     _accountController = new TextEditingController(text: item.account);
     _accountController.addListener(() {
       item.account = _accountController.text;
       verificationAccount(item.account);
     });
-    // 密码输入框控制器
+
     _passwordController = new TextEditingController(text: item.password);
     _passwordController.addListener(() {
       item.password = _passwordController.text;
@@ -221,15 +210,12 @@ class DetailState extends State<Detail> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    print('详情build');
-//    state = GState.of(context);
-    // TODO: implement build
+
     return Scaffold(
       appBar: AppBar(
         title: TextField(
@@ -242,22 +228,18 @@ class DetailState extends State<Detail> {
             fontSize: 18.0,
           ),
           decoration: InputDecoration(
-            hintText: '请这里填写标题',
+            hintText: 'Please fill in the title here',
             hintStyle: TextStyle(color: Color(0xffa2bdd2), fontSize: 18.0),
             border: InputBorder.none,
             enabledBorder: isEditor
                 ? UnderlineInputBorder(
                     borderSide: BorderSide(
                     color: verTitle.isSuccess ? Colors.white30 : Colors.red,
-//                    width: 1.0,
-//                    style: BorderStyle.solid,
                   ))
                 : InputBorder.none,
             focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(
                 color: verTitle.isSuccess ? Colors.white : Colors.red,
-//              width: 1.0,
-//              style: BorderStyle.solid,
               ),
             ),
             contentPadding: EdgeInsets.only(bottom: 5.0),
@@ -288,7 +270,7 @@ class DetailState extends State<Detail> {
                   item.modifyDate != null
                       ? toDateTimeStringZH(
                           datetime: item.modifyDate,
-                          formatString: 'yyyy年MM月dd日 hh:mm分')
+                          formatString: 'yyyyMMdd hh:mm')
                       : '',
                   style: TextStyle(
                     fontSize: 14.0,
@@ -315,13 +297,13 @@ class DetailState extends State<Detail> {
                         controller: _accountController,
                         // obscureText: !canShow,
                         decoration: InputDecoration(
-                          labelText: '账号(选填)',
+                          labelText: 'Account number (optional)',
                           labelStyle: TextStyle(
                             fontSize: 14.0,
                             height: 1.0,
                             color: verAccount.isSuccess ? null : Colors.orange,
                           ),
-                          hintText: '列如xxx@163.com',
+                          hintText: 'xxx@163.com',
                           hintStyle: TextStyle(
                             fontSize: 14.0,
                             height: 1.0,
@@ -360,11 +342,11 @@ class DetailState extends State<Detail> {
                           color: Color(0xff333333),
                         ),
                         decoration: InputDecoration(
-                            labelText: '密码',
+                            labelText: 'password',
                             labelStyle: TextStyle(
                               fontSize: 14.0,
                             ),
-                            hintText: '请填写密码',
+                            hintText: 'Please fill in the password',
                             hintStyle: TextStyle(
                               color: Colors.cyan,
                               height: 1.0,
@@ -395,23 +377,6 @@ class DetailState extends State<Detail> {
                             )),
                       ),
                     ),
-                    /* GestureDetector(
-                      onTapDown: (TapDownDetails details) {
-                        setState(() {
-                          canShow = true;
-                        });
-                      },
-                      onTapUp: (_) {
-                        setState(() {
-                          canShow = false;
-                        });
-                      },
-                      child: Icon(
-                        canShow == true ? Icons.visibility : Icons.visibility_off,
-                        color: canShow == true ? Colors.blue : Color(0xff999999),
-                        size: 70.0,
-                      ),
-                    ), */
                   ],
                 ),
               ),
@@ -421,7 +386,7 @@ class DetailState extends State<Detail> {
                   minWidth: double.infinity,
                 ),
                 child: Text(
-                  '创建时间：${item.createDate != null ? toDateTimeStringZH(datetime: item.createDate, formatString: 'yyyy年MM月dd日 hh:mm分') : ''}',
+                  'Creation time：${item.createDate != null ? toDateTimeStringZH(datetime: item.createDate, formatString: 'yyyyMMdd hh:mm') : ''}',
                   textAlign: TextAlign.right,
                   style: TextStyle(
                     fontSize: 12.0,

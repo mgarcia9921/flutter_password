@@ -14,9 +14,9 @@ class Routes {
   static void configureRoutes(Router router) {
     router.notFoundHandler = new Handler(
         handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return new Home(title: '首页');
+      return new Home(title: 'Home');
     });
-    // 详情页调用
+
     router.define(detail, handler: new Handler(
         handlerFunc: (BuildContext context, Map<String, List<String>> params) {
       String type = params['type']?.first;
@@ -25,12 +25,12 @@ class Routes {
         index = -1;
         print(index);
       }
-      return new Detail(title: '详情页',index: index, isNew: type == 'new');
+      return new Detail(title: 'Details page',index: index, isNew: type == 'new');
     }));
-    // 首页调用
+
     router.define(home, handler: new Handler(
         handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return new Home(title: '首页');
+      return new Home(title: 'Home');
     }));
   }
 }

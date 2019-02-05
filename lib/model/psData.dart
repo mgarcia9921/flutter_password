@@ -6,11 +6,11 @@ part 'psData.g.dart';
 class PsItem {
 	String id;
 	String title;
-  String account; // 账号
-	String password; // 对应帐号的密码
-	int status; // 记录本条密码的状态。 0:普通 1：重要
-	DateTime createDate; // 创建日期
-	DateTime modifyDate; // 修改日期
+  String account;
+	String password;
+	int status;
+	DateTime createDate;
+	DateTime modifyDate;
 	PsItem({this.id, this.account, this.title, String password, int status, this.createDate, this.modifyDate})
       :this.status = status == null ? 0 : status,
        this.password = password == null ? '' : password;

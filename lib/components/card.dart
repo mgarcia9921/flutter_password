@@ -5,7 +5,6 @@ import '../route/index.dart';
 import 'package:fluro/fluro.dart';
 import '../store/index.dart';
 
-// 弹窗点击输出的两个状态，删除和编辑
 enum DialogAction {
   del,
   editor,
@@ -27,9 +26,9 @@ class PsCard extends StatefulWidget {
 
   final VoidCallback onTap;
   final VoidCallback onLongPress;
-  final VoidCallback onTapStar; // 点击星星
+  final VoidCallback onTapStar;
   final PsItem item;
-  final int index; // 索引
+  final int index;
   final Duration duration;
 
   @override
@@ -37,23 +36,20 @@ class PsCard extends StatefulWidget {
 }
 
 class PsCardState extends State<PsCard> with TickerProviderStateMixin {
-  // 定义一个动画控制器
+
   Animation<Color> _colorAnimation;
   Animation<Color> _borderColorAnimation;
   AnimationController _colorAnimationController;
 
-  // AnimationController _opacityAnimationCtl; // 透明动画
+
   Animation<double> _opacityAnimation;
 
-  Animation<double> _heightAnimation; //高度动画
-  AnimationController _delAnimationCtl; // 删除动画的控制器
+  Animation<double> _heightAnimation;
+  AnimationController _delAnimationCtl;
 
 
-  //
-//	PsItem item;
 
   int get status {
-//		print('${widget.item.title}:${widget.item.status}');
     if (widget.item.status == 0) {
       _colorAnimationController?.reverse();
     } else {
@@ -66,7 +62,6 @@ class PsCardState extends State<PsCard> with TickerProviderStateMixin {
   void initState() {
     // TODO: implement initState
     super.initState();
-//    item = widget.item;
     initColorAnimation();
     initOpacityAnimation();
   }
@@ -76,13 +71,11 @@ class PsCardState extends State<PsCard> with TickerProviderStateMixin {
     // TODO: implement dispose
     _colorAnimationController.dispose();
     _delAnimationCtl.dispose();
-    // _opacityAnimationCtl.dispose();
     super.dispose();
   }
 
-  // 初始化动画
+
   void initColorAnimation() {
-    print('初始化color动画:${widget.item.title}');
     _colorAnimationController = new AnimationController(
         duration: Duration(milliseconds: 300), vsync: this);
     _colorAnimation = new ColorTween(
@@ -93,11 +86,9 @@ class PsCardState extends State<PsCard> with TickerProviderStateMixin {
       begin: Colors.blue,
       end: Colors.orange,
     ).animate(_colorAnimationController);
-//		print(widget.item.status);
   }
 
   initOpacityAnimation() {
-    print('初始化删除动画:${widget.item.title}');
     _delAnimationCtl = new AnimationController(
       duration: Duration(milliseconds: 1000),
       vsync: this,
@@ -129,60 +120,42 @@ class PsCardState extends State<PsCard> with TickerProviderStateMixin {
 
     _heightAnimation.addStatusListener((statue) {
       if (statue == AnimationStatus.completed) {
-        // todo 播放动画完成
         delItem(widget.index);
       }
     });
-
-    // _opacityAnimationCtl = new AnimationController(
-    //     duration: Duration(milliseconds: 500), vsync: this);
-    // _opacityAnimation = new CurveTween(curve: Curves.easeIn).animate(_opacityAnimationCtl);
-    // _opacityAnimation.addStatusListener((statue) {
-    //   if (statue == AnimationStatus.completed) {
-    //     // todo 播放动画完成
-    //     delItem(widget.index);
-    //   }
-    // });
   }
 
-  // 播放删除动画
   playDelAnimation() {
-    // _opacityAnimationCtl.forward();
     _delAnimationCtl.forward();
   }
 
-  // 删除当前card
+
   delItem(index) {
     GState model = GState.of(context);
     model.delPsItem(index: index);
     model.savePsData();
   }
 
-  // 混淆密码
+
   obscurePassword(String password) {
     String frontStr = password.isNotEmpty ? password.substring(0, 2) : '';
     return '$frontStr********';
   }
 
-//  弹窗
+
   void showModifyDialog<T>({BuildContext context, Widget child}) {
     showDialog<T>(
       context: context,
       builder: (BuildContext context) => child,
     ).then<void>((T value) {
-      // The value passed to Navigator.pop() or null.
       if (value != null) {}
     });
   }
 
   @override
   void didUpdateWidget(PsCard oldWidget) {
-    // TODO: implement didUpdateWidget
-      // print('更新card的自身状态:$testIndex');
-
     super.didUpdateWidget(oldWidget);
     if (oldWidget.item.id != widget.item.id) {
-      // initOpacityAnimation();
       _delAnimationCtl.reset();
     }
     if (oldWidget.item.status != widget.item.status) {
@@ -198,9 +171,6 @@ class PsCardState extends State<PsCard> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    var st = status;
-    // TODO: implement build
-    print(_opacityAnimation.value);
     return _buildItem();
   }
 
@@ -221,8 +191,6 @@ class PsCardState extends State<PsCard> with TickerProviderStateMixin {
               animation: _colorAnimationController,
               builder: (BuildContext context, Widget child) {
                 return Container(
-                  // color: Colors.white,
-                  // padding: EdgeInsets.all(10.0),
                   decoration: BoxDecoration(
                     border: Border(
                       left: BorderSide(
@@ -277,7 +245,7 @@ class PsCardState extends State<PsCard> with TickerProviderStateMixin {
                                       padding:
                                           const EdgeInsets.only(left: 16.0),
                                       child: new Text(
-                                        '编辑',
+                                        'edit',
                                         style: TextStyle(color: Colors.blue),
                                       ),
                                     ),
@@ -323,7 +291,7 @@ class PsCardState extends State<PsCard> with TickerProviderStateMixin {
                                   Text(
                                     toDateTimeStringZH(
                                         datetime: widget.item.modifyDate,
-                                        formatString: 'yyyy年MM月dd日 hh:mm分'),
+                                        formatString: 'yyyyMMdd hh:mm'),
                                     style: TextStyle(
                                       fontSize: 12.0,
                                       height: 1.2,
